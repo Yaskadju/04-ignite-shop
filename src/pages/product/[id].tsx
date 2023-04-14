@@ -3,6 +3,7 @@ import { GetStaticProps } from "next"
 import Image from "next/image"
 import { stripe } from "@/lib/stripe"
 import Stripe from "stripe"
+import { useRouter } from "next/router"
 
 interface ProductProps {
   product: {
@@ -15,6 +16,12 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
+  const { isFallback } = useRouter()
+
+  if (isFallback) {
+    return <p>Loading...</p>
+  }
+
   return (
     <C.ProductContainer>
       <C.ImageContainer>
@@ -29,6 +36,19 @@ export default function Product({ product }: ProductProps) {
       </C.ProductDetails>
     </C.ProductContainer>
   )
+}
+
+// Quando temos páginas estáticas que possuem parâmetros, infos dinâmicas, precisamos retornar
+// a função getStaticPaths, que devolve esses ids
+// esse método é executado no momento da build
+export const getStaticPaths = async () => {
+  return {
+    // o path pode estar vazio, o que significa que não carrega nada antecipadamente,
+    // o que faz com que as páginas estáticas sejam geradas conforme os produtos sejam acessados em prod,
+    // ou pode conter os principais produtos mais acessados, por exemplo
+    paths: [{ params: { id: "prod_NiA5icwzIy9TzX" } }],
+    fallback: true
+  }
 }
 
 // para buscar os dados do produto, em um SPA nós poderíamos usar um useEffect, porém
