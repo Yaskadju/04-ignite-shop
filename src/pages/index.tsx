@@ -1,5 +1,5 @@
 import { HomeContainer, Product } from "@/styles/pages/home"
-
+import Head from "next/head"
 import Link from "next/link"
 import { GetStaticProps } from "next"
 import Image from "next/image"
@@ -30,24 +30,30 @@ export default function Home({ products }: HomeProps) {
   })
 
   return (
-    <HomeContainer ref={sliderRef} className="keen-slider">
-      {/* <pre>{JSON.stringify(products)}</pre> */}
+    <>
+      <Head>
+        <title>Home | Ignite Shop</title>
+      </Head>
 
-      {products.map(product => {
-        return (
-          <Link href={`/product/${product.id}`} key={product.id} prefetch={false}>
-            <Product className="keen-slider__slide">
-              <Image src={product.imageUrl} width={520} height={400} alt="camiseta1" />
+      <HomeContainer ref={sliderRef} className="keen-slider">
+        {/* <pre>{JSON.stringify(products)}</pre> */}
 
-              <footer>
-                <strong>{product.name}</strong>
-                <span>{product.price}</span>
-              </footer>
-            </Product>
-          </Link>
-        )
-      })}
-    </HomeContainer>
+        {products.map(product => {
+          return (
+            <Link href={`/product/${product.id}`} key={product.id} prefetch={false}>
+              <Product className="keen-slider__slide">
+                <Image src={product.imageUrl} width={520} height={400} alt="camiseta1" />
+
+                <footer>
+                  <strong>{product.name}</strong>
+                  <span>{product.price}</span>
+                </footer>
+              </Product>
+            </Link>
+          )
+        })}
+      </HomeContainer>
+    </>
   )
 }
 
