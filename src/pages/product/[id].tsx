@@ -7,6 +7,7 @@ import { useRouter } from "next/router"
 import axios from "axios"
 import { useState } from "react"
 import Head from "next/head"
+import { useShoppingCart } from "use-shopping-cart"
 
 interface ProductProps {
   product: {
@@ -16,6 +17,9 @@ interface ProductProps {
     price: string
     description: string
     defaultPriceId: string
+    currency: string
+    sku: string
+    priceNum: number
   }
 }
 
@@ -23,28 +27,15 @@ export default function Product({ product }: ProductProps) {
   //const router = useRouter()
   // const {isFallback} = useRouter()
 
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
+  const { addItem } = useShoppingCart()
 
-  async function handleBuyProduct() {
+  async function handleAddToCart() {
     console.log(product.defaultPriceId)
 
     try {
-      setIsCreatingCheckoutSession(true)
-      const response = await axios.post("/api/checkout", {
-        priceId: product.defaultPriceId
-      })
-
-      const { checkoutUrl } = response.data
-
-      // se for enviar pra própria página da aplicação:
-      //router.push("/checkout")
-
-      // se for enviar pro stripe:
-      window.location.href = checkoutUrl
+      addItem({ ...product, price: product.priceNum, image: product.imageUrl })
     } catch (error) {
-      // conectar com uma ferramente de observabilidade (datadog/sentry)
-      alert("Falha ao redirecionar ao checkout")
-      setIsCreatingCheckoutSession(false)
+      alert("Falha ao adicionar no carrinho")
     }
   }
 
@@ -67,9 +58,7 @@ export default function Product({ product }: ProductProps) {
           <span>{product.price}</span>
           <p>{product.description}</p>
 
-          <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>
-            Comprar agora
-          </button>
+          <button onClick={handleAddToCart}>Adicionar ao carrinho</button>
         </C.ProductDetails>
       </C.ProductContainer>
     </>
@@ -118,7 +107,10 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
         price: new Intl.NumberFormat("pt-BR", {
           style: "currency",
           currency: "BRL"
-        }).format((price.unit_amount ? price.unit_amount : 0) / 100)
+        }).format((price.unit_amount ? price.unit_amount : 0) / 100),
+        currency: "BRL",
+        sku: product.id,
+        priceNum: (price.unit_amount ? price.unit_amount : 0) / 100
       }
     },
     revalidate: 60 * 60 * 1 // 1 hora da página salva no cache

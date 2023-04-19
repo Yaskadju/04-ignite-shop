@@ -53,3 +53,8 @@ export const ImageContainer = styled("div", {
     objectFit: "cover"
   }
 })
+
+export const ImagesContainer = styled("div", {
+  display: "flex",
+  gap: "1rem"
+})

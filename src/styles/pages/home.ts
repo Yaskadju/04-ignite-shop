@@ -24,13 +24,19 @@ export const Product = styled("div", {
     objectFit: "cover"
   },
 
+  ".info": {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.5rem"
+  },
+
   footer: {
     position: "absolute",
     bottom: "0.25rem",
     left: "0.25rem",
     right: "0.25rem",
     borderRadius: 6,
-    padding: "2rem",
+    padding: "1rem",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
@@ -43,12 +49,12 @@ export const Product = styled("div", {
     overflow: "hidden",
 
     strong: {
-      fontSize: "$lg",
+      fontSize: "$md",
       color: "$gray100"
     },
 
     span: {
-      fontSize: "$xl",
+      fontSize: "$md",
       fontWeight: "bold",
       color: "$green300"
     }
@@ -60,4 +66,15 @@ export const Product = styled("div", {
       opacity: 1
     }
   }
+})
+
+export const CartIcon = styled("button", {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  background: "$green300",
+  padding: "0.75rem",
+  borderRadius: "8px",
+  cursor: "pointer",
+  border: "none"
 })
