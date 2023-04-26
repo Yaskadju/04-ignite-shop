@@ -15,17 +15,17 @@ export function CartModal() {
   async function handleBuyProduct() {
     // console.log(product.defaultPriceId)
 
-    const line_items =
-      cartDetails &&
-      Object.values(cartDetails).map(product => {
-        return { price: product.defaultPriceId, quantity: product.quantity }
-      })
+    // const products =
+    //   cartDetails &&
+    //   Object.values(cartDetails).map(product => {
+    //     return { price: product.defaultPriceId, quantity: product.quantity }
+    //   })
 
     try {
       setIsCreatingCheckoutSession(true)
       const response = await axios.post("/api/checkout", {
         // priceId: product.defaultPriceId
-        line_items
+        cartDetails
       })
 
       const { checkoutUrl } = response.data

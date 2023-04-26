@@ -1,28 +1,46 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { stripe } from "../../lib/stripe"
+import Stripe from "stripe"
+const { validateCartItems } = require("use-shopping-cart/utilities")
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { line_items } = req.body
+  const { cartDetails } = req.body
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed." })
   }
 
-  if (Object.keys(line_items).length <= 0) {
+  console.log(cartDetails)
+
+  if (Object.keys(cartDetails).length <= 0) {
     return res.status(400).json({ error: "Cart is empty" })
   }
+
+  const response = await stripe.products.list({
+    expand: ["data.default_price"]
+  })
+
+  const inventory = response.data.map(product => {
+    const price = product.default_price as Stripe.Price
+
+    return {
+      id: product.id,
+      name: product.name,
+      image: product.images[0],
+      description: product.description,
+      currency: "BRL",
+      price: price.unit_amount
+    }
+  })
 
   // if (!priceId) {
   //   return res.status(400).json({ error: "Price not found" })
   // }
 
-  // line_items: [
-  //   {
-  //     price: priceId,
-  //     quantity: 1
-  //   }
-  // ]
+  const line_items = validateCartItems(inventory, cartDetails)
 
+  console.log(cartDetails)
+  console.log(inventory)
   console.log(line_items)
 
   const successUrl = `${process.env.NEXT_URL}/success?session_id={CHECKOUT_SESSION_ID}`
