@@ -17,5 +17,23 @@ export const CartIcon = styled("div", {
   background: "$gray800",
   padding: "0.75rem",
   borderRadius: "8px",
-  cursor: "pointer"
+  cursor: "pointer",
+
+  position: "relative"
+})
+
+export const CartNumber = styled("div", {
+  width: "25px",
+  height: "25px",
+  background: "$green500",
+  borderRadius: "50%",
+  fontSize: "0.8rem",
+
+  position: "absolute",
+  top: "-20%",
+  right: "-20%",
+
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
 })

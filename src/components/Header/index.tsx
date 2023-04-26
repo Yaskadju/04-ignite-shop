@@ -16,10 +16,12 @@ export function Header() {
       <Link href="/">
         <Image src={logoImg} alt="" />
       </Link>
-      <p>Cart Count:</p> {cartCount}
+
       <Dialog.Root>
         <Dialog.Trigger asChild>
           <C.CartIcon>
+            {(cartCount as number) > 0 && <C.CartNumber>{cartCount}</C.CartNumber>}
+
             <Bag size={25} color="#8D8D99" weight="bold" />
           </C.CartIcon>
         </Dialog.Trigger>
